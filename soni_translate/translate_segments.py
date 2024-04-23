@@ -33,7 +33,9 @@ def translate_iterative(segments, TRANSLATE_AUDIO_TO):
 
     for line in tqdm(range(len(segments_))):
         text = segments_[line]["text"]
+        print("Translating: ", text)
         translated_line = translator.translate(text.strip())
+        print("Translated: ", translated_line)
         segments_[line]["text"] = translated_line
 
     return segments_
