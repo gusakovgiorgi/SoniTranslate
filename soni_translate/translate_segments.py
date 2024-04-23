@@ -1,5 +1,6 @@
 from tqdm import tqdm
-from deep_translator import GoogleTranslator
+from deep_translator import DeeplTranslator
+import os
 from itertools import chain
 import copy
 from .language_configuration import fix_code_language
@@ -29,7 +30,12 @@ def translate_iterative(segments, TRANSLATE_AUDIO_TO):
 
     segments_ = copy.deepcopy(segments)
 
-    translator = GoogleTranslator(source="auto", target=TRANSLATE_AUDIO_TO)
+    # get environment variable DEEPL_API_KEY and sabe it to local variable
+
+    DEPPL_API_KEY = os.environ.get("DEEPL_API_KEY")
+
+    translator = DeeplTranslator(api_key=DEPPL_API_KEY, source="auto", target="ru", use_free_api=True)
+    DeeplTranslator(source="auto", target=TRANSLATE_AUDIO_TO)
 
     for line in tqdm(range(len(segments_))):
         text = segments_[line]["text"]
@@ -87,7 +93,8 @@ def translate_batch(segments, TRANSLATE_AUDIO_TO, chunk_size=2000):
         text_merge.append(actual_chunk)
 
     # translate chunks
-    translator = GoogleTranslator(source="auto", target=TRANSLATE_AUDIO_TO)
+    DEPPL_API_KEY = os.environ.get("DEEPL_API_KEY")
+    translator = DeeplTranslator(api_key=DEPPL_API_KEY, source="auto", target="ru", use_free_api=True)
     try:
         translated_lines = translator.translate_batch(text_merge)
     except Exception as error:
